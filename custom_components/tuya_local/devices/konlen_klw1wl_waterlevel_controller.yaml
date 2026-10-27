@@ -1,0 +1,234 @@
+name: Water level controller
+products:
+  - id: 7antuxkiymgkbdn3
+    manufacturer: Konlen
+    model: KL-W1WL
+entities:
+  # ---- Relays -------------------------------------------------------------
+  - entity: switch
+    name: Switch 1
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+
+  - entity: switch
+    name: Switch 2
+    dps:
+      - id: 108
+        type: boolean
+        name: switch
+
+  # ---- Live level (6 steps: 0, 20, 40, 60, 80, 100) -------------------------
+  # DP 116 mirrors DP 107 and is intentionally not exposed.
+  - entity: sensor
+    name: Water level
+    dps:
+      - id: 107
+        type: integer
+        name: sensor
+        unit: "%"
+        class: measurement
+
+  - entity: sensor
+    translation_key: status
+    category: diagnostic
+    dps:
+      - id: 106
+        type: string
+        name: sensor
+
+  # ---- Channel 1 (pump) settings ------------------------------------------
+  - entity: select
+    name: Work mode
+    category: config
+    dps:
+      - id: 110
+        type: string
+        name: option
+        mapping:
+          - dps_val: BUSHUI
+            value: Add
+          - dps_val: PAISHUI
+            value: Drain
+          - dps_val: BUSHUITIME
+            value: Add (time limited)
+          - dps_val: PAISHUITIME
+            value: Drain (time limited)
+
+  - entity: number
+    name: Level on 1
+    category: config
+    dps:
+      - id: 101
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  - entity: number
+    name: Level off 1
+    category: config
+    dps:
+      - id: 102
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  - entity: number
+    name: Limited time
+    category: config
+    class: duration
+    dps:
+      - id: 111
+        type: integer
+        name: value
+        unit: min
+        range:
+          min: 0
+          max: 720
+
+  - entity: number
+    name: Switch 1 delay
+    category: config
+    class: duration
+    dps:
+      - id: 109
+        type: integer
+        name: value
+        unit: s
+        range:
+          min: 0
+          max: 300
+
+  # ---- Channel 2 settings -------------------------------------------------
+  - entity: select
+    name: Switch 2 function
+    category: config
+    dps:
+      - id: 114
+        type: string
+        name: option
+        mapping:
+          - dps_val: Manual
+            value: Manual
+          - dps_val: Alarm
+            value: Alarm
+          - dps_val: LOHC
+            value: Low on, high off
+          - dps_val: LCHO
+            value: Low off, high on
+
+  - entity: number
+    name: Level on 2
+    category: config
+    dps:
+      - id: 117
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  - entity: number
+    name: Level off 2
+    category: config
+    dps:
+      - id: 118
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  # ---- Alarms -------------------------------------------------------------
+  - entity: number
+    name: Low level alarm
+    category: config
+    dps:
+      - id: 104
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  - entity: number
+    name: High level alarm
+    category: config
+    dps:
+      - id: 103
+        type: integer
+        name: value
+        unit: "%"
+        range:
+          min: 0
+          max: 100
+        mapping:
+          - step: 20
+
+  - entity: select
+    name: Remote alarm
+    category: config
+    dps:
+      - id: 105
+        type: string
+        name: option
+        mapping:
+          - dps_val: "OFF"
+            value: "Off"
+          - dps_val: ALARM_L
+            value: Low
+          - dps_val: ALARM_H
+            value: High
+          - dps_val: ALARM_HL
+            value: High and low
+
+  - entity: select
+    name: Buzzer alarm
+    category: config
+    dps:
+      - id: 113
+        type: string
+        name: option
+        mapping:
+          - dps_val: localof
+            value: "Off"
+          - dps_val: locall
+            value: Low
+          - dps_val: localh
+            value: High
+          - dps_val: localhl
+            value: High and low
+
+  # ---- Main switch (enables or disables both relays) ----------------------
+  - entity: select
+    name: Main switch
+    category: config
+    dps:
+      - id: 112
+        type: string
+        name: option
+        mapping:
+          - dps_val: PON
+            value: "On"
+          - dps_val: POFF
+            value: "Off"
